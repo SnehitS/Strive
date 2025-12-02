@@ -1,0 +1,5 @@
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0.5rem 1rem;background:#0f172a;color:#fff}
+.nav-brand{font-weight:700}
+.nav-links{list-style:none;display:flex;gap:1rem;margin:0;padding:0}
+.nav-links a{color:#9ca3af;text-decoration:none}
+.nav-links a:hover{color:#fff}
