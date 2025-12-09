@@ -23,11 +23,11 @@ export default function Login() {
         const response = await loginUser(payload)
 
         if (response.user) {
-        localStorage.setItem("currentUser", JSON.stringify(response.user))
-        setMsg('✓ Logged in successfully!')
-        window.location.href = '/';
+            localStorage.setItem("currentUser", JSON.stringify(response.user))
+            setMsg('✓ Logged in successfully!')
+            window.location.href = '/';
         } else {
-        setMsg('✗ Invalid name or email')
+            setMsg('✗ Invalid name or email')
     }
     } catch (err) {
         setMsg('✗ Unable to log in')

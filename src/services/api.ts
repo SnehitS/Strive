@@ -32,7 +32,6 @@ export async function loginUser(payload: any) {
   return res.json()
 }
 
-
 // Calculate accumulated stats from sessions stored in localStorage
 export function getAccumulatedStats() {
   const sessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]')
