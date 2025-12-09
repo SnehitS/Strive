@@ -133,43 +133,54 @@ export default function SubmitStats() {
 
   // Submit session
   async function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (exercises.length === 0) {
-      setMsg('✗ Please add at least one exercise')
-      return
-    }
-    setLoading(true)
-    setMsg(null)
-    try {
-      const sessionData = {
-        sessionTime,
-        exercises,
-        totalWeight,
-        timestamp: new Date().toISOString()
-      }
-      
-      // Save to localStorage
-      const sessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]')
-      sessions.push(sessionData)
-      localStorage.setItem('workoutSessions', JSON.stringify(sessions))
-      
-      // Try to submit to backend (optional)
-      try {
-        await submitStats(sessionData)
-      } catch {
-        // If backend fails, we still have localStorage saved
-      }
-      
-      setMsg('✓ Workout saved successfully!')
-      setExercises([])
-      setSessionTime(60)
-    } catch (err) {
-      setMsg('✗ Error saving workout')
-    } finally {
-      setLoading(false)
-    }
+  e.preventDefault()
+  if (exercises.length === 0) {
+    setMsg('✗ Please add at least one exercise')
+    return
   }
-
+  
+  // Get current user from localStorage
+  const currentUser = localStorage.getItem('currentUser')
+  if (!currentUser) {
+    setMsg('✗ Please log in to save workouts')
+    return
+  }
+  
+  const user = JSON.parse(currentUser)
+  
+  setLoading(true)
+  setMsg(null)
+  try {
+    const sessionData = {
+      sessionTime,
+      exercises,
+      totalWeight,
+      timestamp: new Date().toISOString(),
+      userId: user._id  // Add user ID
+    }
+    
+    // Save to localStorage (backup)
+    const sessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]')
+    sessions.push(sessionData)
+    localStorage.setItem('workoutSessions', JSON.stringify(sessions))
+    
+    // Submit to backend
+    try {
+      await submitStats(sessionData)
+      setMsg('✓ Workout saved successfully!')
+    } catch (err) {
+      console.error('Backend save failed:', err)
+      setMsg('✓ Workout saved locally (backend unavailable)')
+    }
+    
+    setExercises([])
+    setSessionTime(60)
+  } catch (err) {
+    setMsg('✗ Error saving workout')
+  } finally {
+    setLoading(false)
+  }
+}
   return (
     <section>
       <h1>Log Your Workout</h1>

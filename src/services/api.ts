@@ -6,12 +6,36 @@ export async function getHealth(): Promise<{status:string}> {
   return res.json()
 }
 
-export async function submitStats(payload: any){
-  const res = await fetch(`${API_BASE}/stats`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
-  if (!res.ok) throw new Error('submit error')
-  return res.json()
+export async function submitStats(data: any) {
+  const response = await fetch(`${API_BASE}/stats`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to submit stats');
+  }
+
+  return response.json();
 }
 
+export async function getUserWorkouts(userId: string) {
+  const response = await fetch(`${API_BASE}/workouts/${userId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch workouts');
+  }
+
+  return response.json();
+}
 export async function registerUser(payload: any) {
   const res = await fetch(`${API_BASE}/register`, {
     method: 'POST',
@@ -56,4 +80,8 @@ export function getAccumulatedStats() {
   })
 
   return stats
+
+  
 }
+
+
